@@ -133,14 +133,21 @@ exports.userLogin = async (req, res)=>{
             })
         }
 
-        const result = await User.find({email});
+        const result = await User.find({email, password});
 
-        console.log('login result' ,result);
+        if(result.length == 0){
+            return res.status(404).json({
+                success : false,
+                status : 404,    
+                message : 'invelid email ID or password, please enter velid email or password'
+            })
+        }
 
         return res.status(200).json({
             success : true,
-            status : 500,
+            status : 200,
             message : "given user credentials are correct.",
+            ...result[0]._doc
         })
     }catch(error){
         console.log('signup API error :', error);
